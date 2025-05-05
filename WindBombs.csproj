@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net481</TargetFramework>
+    <LangVersion>Latest</LangVersion>
+	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <OutputPath>bin\</OutputPath>
+    <BaseOutputPath></BaseOutputPath>
+  </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="lib/*.dll">
+            <Private>false</Private>
+			<CopyLocal>False</CopyLocal>
+        </Reference>
+    </ItemGroup>
+
+</Project>
