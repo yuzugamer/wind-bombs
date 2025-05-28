@@ -234,6 +234,7 @@ public partial class WindBombMod : BaseUnityPlugin
             x => x.MatchIsinst<ScavengerBomb>()
         ))
         {
+            c.MoveAfterLabels();
             c.Emit(OpCodes.Ldloc, 4);
             c.Emit(OpCodes.Ldloc, 7);
             c.EmitDelegate(IsNotWindBomb);
@@ -293,6 +294,7 @@ public partial class WindBombMod : BaseUnityPlugin
             x => x.MatchNewobj<AbstractSpear>()
         ))
         {
+            c.MoveAfterLabels();
             c.Emit(OpCodes.Ldarg_0);
             c.EmitDelegate(WindBombTrade);
         }
