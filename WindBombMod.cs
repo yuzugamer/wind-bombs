@@ -10,15 +10,16 @@ using MoreSlugcats;
 using System;
 using MonoMod.RuntimeDetour;
 using System.Reflection;
+using WindBombs;
 
 #pragma warning disable CS0618
 
 [module: UnverifiableCode]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 
-namespace WindBomb;
+namespace WindBombs;
 
-[BepInPlugin("yuzugamer.windbombs", "Wind Bomb", "1.0.0")]
+[BepInPlugin("yuzugamer.windbombs", "Wind Bomb", "1.1.0")]
 
 public partial class WindBombMod : BaseUnityPlugin
 {
@@ -63,6 +64,10 @@ public partial class WindBombMod : BaseUnityPlugin
         }
         if (!MultiplayerUnlocks.ItemUnlockList.Contains(ItemUnlockWindBomb))
             MultiplayerUnlocks.ItemUnlockList.Add(ItemUnlockWindBomb);
+        if (ModManager.ActiveMods.Any(mod => mod.id == "henpemaz_rainmeadow"))
+        {
+            MeadowCompat.MeadowEnabled = true;
+        }
     }
 
     private static void On_RainWorld_OnModsDisabled(On.RainWorld.orig_OnModsDisabled orig, RainWorld self, ModManager.Mod[] newlyDisabledMods)
@@ -115,31 +120,7 @@ public partial class WindBombMod : BaseUnityPlugin
             orig(self, hitChunk);
             return;
         }
-        if (self.slatedForDeletetion)
-        {
-            return;
-        }
-        Vector2 vector = Vector2.Lerp(self.firstChunk.pos, self.firstChunk.lastPos, 0.35f);
-        //self.room.AddObject(new SootMark(self.room, vector, 80f, true));
-        if (!self.explosionIsForShow)
-        {
-            self.room.AddObject(new WindExplosion(self.room, self, vector, 7, 250f, 6.2f, 60f, self.thrownBy, 0.7f, 22f, 1f, wind.isGravity));
-        }
-        self.room.AddObject(new Explosion.ExplosionLight(vector, 280f, 1f, 7, self.explodeColor));
-        self.room.AddObject(new ExplosionSpikes(self.room, vector, 14, 30f, 7f, 7f, 170f, self.explodeColor));
-        self.room.ScreenMovement(new Vector2?(vector), default(Vector2), 0.45f);
-        for (int m = 0; m < self.abstractPhysicalObject.stuckObjects.Count; m++)
-        {
-            self.abstractPhysicalObject.stuckObjects[m].Deactivate();
-        }
-        self.room.PlaySound(SoundID.Vulture_Wing_Woosh_LOOP, vector, 1f, 1.4f, self.abstractPhysicalObject);
-        self.room.InGameNoise(new InGameNoise(vector, 1000f, self, 1f));
-        bool flag = hitChunk != null;
-        if (self.smoke != null)
-        {
-            self.smoke.Destroy();
-        }
-        self.Destroy();
+        wind.WindExplode(hitChunk);
     }
 
     private static Color BombColor(Color color, ScavengerBomb self) => self is WindBomb ? self.explodeColor : color;

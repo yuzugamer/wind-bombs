@@ -1,7 +1,7 @@
 ﻿using Menu.Remix.MixedUI;
 using UnityEngine;
 
-namespace WindBomb;
+namespace WindBombs;
 
 public sealed class ModOptions : OptionInterface
 {
